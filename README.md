@@ -1,6 +1,8 @@
 # Mouhsin Tanani — Applied AI & Data
 
-A bilingual English/French portfolio built with React, TypeScript, and Vite. Warm off-white, cobalt, and sage; lightweight SVG/CSS architecture diagrams; no backend, database, secret keys, analytics, or submission service required. Fonts are bundled locally. Contact uses a real email link.
+A bilingual English/French portfolio built with React, TypeScript, and Vite. A compact overview with a bold cobalt hero, interactive capability cards, and five foldable sections: **Experience → Projects → Research → Education → Skills**. No backend, database, secret keys, analytics, or submission service required. Fonts are bundled locally. Contact uses a real email link.
+
+Experience starts open; the other sections start folded. Navigation opens its destination, and **Expand all / Collapse all** controls the whole overview. Projects start with three highlights; visitors can select all nine or a category. Technical explanations stay behind a second disclosure inside project dialogs.
 
 ## Local development
 
@@ -21,9 +23,9 @@ npm run preview -- --port 4173 --strictPort
 
 ## Editing content
 
-Edit **`src/content.ts`**. Profile links, projects, experiences, education, leadership, grouped skills, research resources, and EN/FR copy live there. Every localized field has `en` and `fr` values; keep both up to date. The default language is English and a visitor's selection is saved locally when storage is available.
+Edit **`src/content.ts`** for profile links and detailed project, experience, education, skills, and research facts. Edit **`src/overview.ts`** for short homepage summaries, hero copy, and section labels. Every localized field has `en` and `fr` values; keep both up to date. The default language is English and a visitor's selection is saved locally when storage is available.
 
-- Projects have stable IDs, one primary filter category, extra tags, context, question, contribution, approach, documented results, limitations, technologies, and optional resources. Each appears once in the project index. The three selected projects also have illustrative architecture diagrams, not performance charts or real employee records.
+- Projects have stable IDs, one primary filter category, extra tags, context, question, contribution, approach, documented results, limitations, technologies, and optional resources. Each appears once in the project grid. The three selected projects have illustrative architecture diagrams in their detail dialogs, not performance charts or real employee records.
 - Project links use `available: true`. Set this to `false` when a link is confirmed broken or private, preserving its URL and an `editingNote` for future editing. Unavailable links are hidden in project details. Research reports without available links fall back to their case study; FedTwin's unavailable link is simply hidden.
 - Direct links such as `#project/fasa` open accessible case-study dialogs. Escape, the close actions, and the backdrop close them; focus is trapped inside and restored to the originating button.
 - The fifth experience has all requested fields and `published: false`. Fill in its company, localized role, dates, location, summary, contributions, technologies, and project IDs, then set `published: true`. Do not publish placeholder values. Keep the experience list in newest-first chronological order.
@@ -51,7 +53,7 @@ With the development server running:
 npm run test:smoke
 ```
 
-The Playwright smoke suite uses `/usr/bin/chromium`. Override `CHROMIUM_PATH` for a different installed Chromium executable, and `PORTFOLIO_TEST_URL` for another server address. It checks filters, nine substantive dialogs, focus trapping/restoration, Escape/backdrop dismissal, French translation and persistence, mobile navigation, hidden placeholders/CV, direct project links, viewport overflow, browser errors, and automated axe WCAG A/AA checks. Screenshots are written to ignored `test-results/` at desktop, tablet, and small-phone sizes in both languages. Automated accessibility checks complement visual and keyboard inspection; they are not a certification.
+The Playwright smoke suite uses `/usr/bin/chromium`. Override `CHROMIUM_PATH` for a different installed Chromium executable, and `PORTFOLIO_TEST_URL` for another server address. It checks section order, short-page height limits, folding by keyboard, expand/collapse all, navigation opening folded destinations, filters, nine substantive dialogs, optional technical detail, focus trapping/restoration, Escape/backdrop dismissal, French translation and persistence, mobile navigation, hidden placeholders/CV, direct project and section links, viewport overflow, browser errors, and automated axe WCAG A/AA checks. Screenshots are written to ignored `test-results/` at desktop, tablet, and small-phone sizes in both languages. Automated accessibility checks complement visual and keyboard inspection; they are not a certification.
 
 ## Deployment
 

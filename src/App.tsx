@@ -1,17 +1,26 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import {
   Asterisk,
   ArrowDown,
   ArrowRight,
   ArrowUp,
   ArrowUpRight,
+  BookOpen,
+  BriefcaseBusiness,
   Check,
+  ChevronDown,
   ChevronRight,
+  Code2,
   FileText,
   Github,
+  GraduationCap,
   Linkedin,
-  Mail,
   Menu,
+  Minus,
+  Network,
+  Plus,
+  Sparkles,
+  Workflow,
   X,
 } from "lucide-react";
 import {
@@ -27,6 +36,15 @@ import {
   type Language,
   type Project,
 } from "./content";
+import {
+  experienceOverview,
+  overviewCopy,
+  projectOverview,
+  researchOverview,
+  sectionInfo,
+  sectionOrder,
+  type SectionId,
+} from "./overview";
 
 function ExternalLink({
   href,
@@ -34,7 +52,7 @@ function ExternalLink({
   className = "",
 }: {
   href: string;
-  children: React.ReactNode;
+  children: ReactNode;
   className?: string;
 }) {
   return (
@@ -46,84 +64,6 @@ function ExternalLink({
     >
       {children}
     </a>
-  );
-}
-
-function Workflow({ lang }: { lang: Language }) {
-  const c = copy[lang];
-  return (
-    <div className="workflow" aria-label={c.diagramCaption}>
-      <div className="workflow-top">
-        <span className="micro">{c.diagramLabel}</span>
-        <span className="tiny-cross">+</span>
-      </div>
-      <svg
-        className="workflow-art"
-        viewBox="0 0 440 260"
-        role="img"
-        aria-label={`${c.data} → ${c.models} → ${c.impact}`}
-      >
-        <defs>
-          <pattern
-            id="dots"
-            width="18"
-            height="18"
-            patternUnits="userSpaceOnUse"
-          >
-            <circle cx="1" cy="1" r=".9" fill="#bcc4b9" />
-          </pattern>
-        </defs>
-        <rect width="440" height="260" fill="url(#dots)" />
-        <g fill="none" stroke="#9fab9c" strokeWidth="1">
-          <path d="M55 74H123L189 130M55 130H189M55 186H123L189 130M251 130H315L358 76M251 130H370M251 130H315L358 184" />
-        </g>
-        <g fill="#f7f7f2" stroke="#83937f">
-          <rect x="33" y="62" width="25" height="25" rx="4" />
-          <rect x="33" y="118" width="25" height="25" rx="4" />
-          <rect x="33" y="174" width="25" height="25" rx="4" />
-        </g>
-        <circle
-          cx="220"
-          cy="130"
-          r="74"
-          fill="#eef0e8"
-          fillOpacity=".6"
-          stroke="#c5cdbe"
-        />
-        <circle
-          cx="220"
-          cy="130"
-          r="56"
-          fill="none"
-          stroke="#c5cdbe"
-          strokeDasharray="3 7"
-        />
-        <rect x="189" y="99" width="62" height="62" rx="16" fill="#284add" />
-        <g stroke="#fff" fill="none" strokeWidth="1.4">
-          <path d="M207 120l13-8 13 8v17l-13 8-13-8zM207 120l13 8 13-8M220 128v17" />
-        </g>
-        <g fill="#f7f7f2" stroke="#83937f">
-          <rect x="358" y="62" width="28" height="28" rx="14" />
-          <rect x="367" y="117" width="28" height="28" rx="6" />
-          <path d="M372 174l15 13-15 13-15-13z" />
-        </g>
-        <g fontFamily="Arial, sans-serif" fontSize="12" fill="#687264">
-          <text x="25" y="236">
-            {c.data}
-          </text>
-          <text x="220" y="236" textAnchor="middle">
-            {c.models}
-          </text>
-          <text x="412" y="236" textAnchor="end">
-            {c.impact}
-          </text>
-        </g>
-      </svg>
-      <div className="workflow-bottom">
-        <span>{c.diagramCaption}</span>
-        <span className="micro">MT / 2026</span>
-      </div>
-    </div>
   );
 }
 
@@ -260,7 +200,8 @@ function ProjectDialog({
   onClose: () => void;
 }) {
   const ref = useRef<HTMLDialogElement>(null);
-  const c = copy[lang];
+  const c = copy[lang],
+    o = overviewCopy[lang];
   useEffect(() => {
     const dialog = ref.current;
     if (project && dialog && !dialog.open) {
@@ -287,9 +228,9 @@ function ProjectDialog({
         if (e.key !== "Tab") return;
         const elements = [
           ...e.currentTarget.querySelectorAll<HTMLElement>(
-            "a[href], button:not(:disabled)",
+            "a[href], button:not(:disabled), summary",
           ),
-        ];
+        ].filter((el) => el.getClientRects().length);
         const first = elements[0],
           last = elements.at(-1);
         if (e.shiftKey && document.activeElement === first) {
@@ -307,9 +248,7 @@ function ProjectDialog({
       {project && (
         <div className="dialog-body">
           <div className="dialog-top">
-            <span className="micro">
-              {c.projectDetails} / {project.number}
-            </span>
+            <span className="eyebrow">{project.context[lang]}</span>
             <button
               className="icon-button close-dialog"
               onClick={onClose}
@@ -319,55 +258,51 @@ function ProjectDialog({
               <X size={22} />
             </button>
           </div>
-          <span className="eyebrow">{project.context[lang]}</span>
           <h2 id="dialog-title">{project.title[lang]}</h2>
-          <p className="dialog-subtitle">{project.subtitle[lang]}</p>
+          <p className="dialog-subtitle">
+            {projectOverview[project.id].summary[lang]}
+          </p>
+          <div className="tags">
+            {project.technologies.map((t) => (
+              <span key={t}>{t}</span>
+            ))}
+          </div>
           {project.featured && <ProjectVisual id={project.id} lang={lang} />}
           <div className="case-content">
-            {(
-              [
-                "problem",
-                "context",
-                "contribution",
-                "approach",
-                "results",
-                "limitations",
-              ] as const
-            ).map((field) => (
-              <section key={field}>
-                <h3>{c[field]}</h3>
-                <p>{project[field][lang]}</p>
-              </section>
-            ))}
             <section>
-              <h3>{c.technologies}</h3>
-              <div className="tags">
-                {project.technologies.map((t) => (
-                  <span key={t}>{t}</span>
-                ))}
-              </div>
+              <h3>{o.contribution}</h3>
+              <p>{project.contribution[lang]}</p>
             </section>
-            <section>
-              <h3>{c.resources}</h3>
-              <div className="resource-links">
-                {project.links.some((l) => l.available) ? (
-                  project.links
-                    .filter((l) => l.available)
-                    .map((l) => (
-                      <ExternalLink
-                        href={l.url}
-                        className="text-link"
-                        key={l.url}
-                      >
-                        {l.label[lang]}
-                        <ArrowUpRight size={16} />
-                      </ExternalLink>
-                    ))
-                ) : (
-                  <p>{c.noPublicResources}</p>
-                )}
-              </div>
+            <section className="result-note">
+              <h3>{o.results}</h3>
+              <p>{project.results[lang]}</p>
             </section>
+          </div>
+          <details className="technical-details">
+            <summary>
+              {o.deeper}
+              <ChevronDown size={17} />
+            </summary>
+            <div className="case-content">
+              {(["problem", "context", "approach", "limitations"] as const).map(
+                (field) => (
+                  <section key={field}>
+                    <h3>{c[field]}</h3>
+                    <p>{project[field][lang]}</p>
+                  </section>
+                ),
+              )}
+            </div>
+          </details>
+          <div className="resource-links">
+            {project.links
+              .filter((l) => l.available)
+              .map((l) => (
+                <ExternalLink href={l.url} className="text-link" key={l.url}>
+                  {l.label[lang]}
+                  <ArrowUpRight size={16} />
+                </ExternalLink>
+              ))}
           </div>
           <button className="button secondary" onClick={onClose}>
             {c.close}
@@ -379,7 +314,68 @@ function ProjectDialog({
   );
 }
 
-const navigation = ["work", "about", "experience", "contact"];
+const sectionIcons = {
+  experience: BriefcaseBusiness,
+  projects: Code2,
+  research: BookOpen,
+  education: GraduationCap,
+  skills: Sparkles,
+};
+function FoldSection({
+  id,
+  lang,
+  open,
+  toggle,
+  children,
+}: {
+  id: SectionId;
+  lang: Language;
+  open: boolean;
+  toggle: () => void;
+  children: ReactNode;
+}) {
+  const info = sectionInfo[id],
+    o = overviewCopy[lang],
+    Icon = sectionIcons[id];
+  return (
+    <section
+      id={id}
+      className={`fold-section fold-${id} ${open ? "is-open" : ""}`}
+      aria-labelledby={`${id}-heading`}
+    >
+      <h2 id={`${id}-heading`}>
+        <button
+          className="fold-toggle"
+          aria-expanded={open}
+          aria-controls={`${id}-panel`}
+          onClick={toggle}
+        >
+          <span className="section-symbol">
+            <Icon size={23} strokeWidth={1.6} />
+          </span>
+          <span className="fold-name">
+            <span className="fold-label">
+              <span className="section-number">
+                0{sectionOrder.indexOf(id) + 1}
+              </span>
+              {info.title[lang]}
+            </span>
+            <span className="fold-subtitle">{info.subtitle[lang]}</span>
+          </span>
+          <span className="fold-preview">{info.preview[lang]}</span>
+          <span className="fold-control">
+            <span>{open ? o.collapse : o.expand}</span>
+            {open ? <Minus size={21} /> : <Plus size={21} />}
+          </span>
+        </button>
+      </h2>
+      <div id={`${id}-panel`} className="fold-panel" hidden={!open}>
+        {children}
+      </div>
+    </section>
+  );
+}
+
 function readProjectHash() {
   return window.location.hash.startsWith("#project/")
     ? window.location.hash.slice(9)
@@ -392,35 +388,62 @@ function getLanguage(): Language {
     return "en";
   }
 }
+function hashSection(): SectionId | undefined {
+  const hash = window.location.hash.slice(1);
+  return hash === "work" ? "projects" : sectionOrder.find((id) => id === hash);
+}
 
 export default function App() {
   const [lang, setLang] = useState<Language>(getLanguage);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [category, setCategory] = useState("all");
+  const [category, setCategory] = useState("highlights");
   const [projectId, setProjectId] = useState<string | null>(readProjectHash);
+  const [openSections, setOpenSections] = useState<Set<SectionId>>(
+    () => new Set(["experience", ...(hashSection() ? [hashSection()!] : [])]),
+  );
   const triggerRef = useRef<HTMLElement | null>(null);
-  const c = copy[lang];
+  const c = copy[lang],
+    o = overviewCopy[lang];
   const selectedProject = projects.find((p) => p.id === projectId);
   const visibleProjects = projects.filter(
-    (p) => category === "all" || p.category === category,
+    (p) =>
+      category === "all" ||
+      (category === "highlights" ? p.featured : p.category === category),
+  );
+  const publicExperiences = experiences.filter(
+    (e) =>
+      e.published &&
+      [
+        e.company,
+        ...Object.values(e.role),
+        ...Object.values(e.dates),
+        ...Object.values(e.location),
+        ...Object.values(e.summary),
+        ...e.contributions.flatMap((v) => Object.values(v)),
+        ...e.technologies,
+      ].every((v) => v.trim() && !v.includes("[")),
   );
   useEffect(() => {
     document.documentElement.lang = lang;
     document.title = `Mouhsin Tanani — ${lang === "en" ? "Applied AI & Data" : "IA appliquée & données"}`;
     document
       .querySelector('meta[name="description"]')
-      ?.setAttribute("content", `${c.intro} ${c.seeking}`);
+      ?.setAttribute("content", `${o.intro} ${o.opportunity}`);
     document
       .querySelector('meta[property="og:description"]')
-      ?.setAttribute("content", c.intro);
+      ?.setAttribute("content", o.intro);
     try {
       localStorage.setItem("portfolio-language", lang);
     } catch {
-      /* Storage is optional. */
+      /* Optional storage. */
     }
-  }, [lang, c]);
+  }, [lang, o]);
   useEffect(() => {
-    const sync = () => setProjectId(readProjectHash());
+    const sync = () => {
+      setProjectId(readProjectHash());
+      const id = hashSection();
+      if (id) setOpenSections((previous) => new Set([...previous, id]));
+    };
     window.addEventListener("hashchange", sync);
     window.addEventListener("popstate", sync);
     return () => {
@@ -435,6 +458,17 @@ export default function App() {
     window.addEventListener("keydown", close);
     return () => window.removeEventListener("keydown", close);
   }, []);
+  const visitSection = (id: SectionId) => {
+    setOpenSections((previous) => new Set([...previous, id]));
+    setMenuOpen(false);
+  };
+  const toggleSection = (id: SectionId) =>
+    setOpenSections((previous) => {
+      const next = new Set(previous);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
   const openProject = (id: string) => {
     triggerRef.current = document.activeElement as HTMLElement;
     setProjectId(id);
@@ -446,9 +480,11 @@ export default function App() {
       window.history.replaceState(
         null,
         "",
-        `${window.location.pathname}${window.location.search}#work`,
+        `${window.location.pathname}${window.location.search}#projects`,
       );
-    triggerRef.current?.focus({ preventScroll: true });
+    if (triggerRef.current?.isConnected)
+      triggerRef.current.focus({ preventScroll: true });
+    else setOpenSections((previous) => new Set([...previous, "projects"]));
   };
   return (
     <>
@@ -463,26 +499,32 @@ export default function App() {
             aria-label={`${profile.name} — ${lang === "en" ? "Home" : "Accueil"}`}
           >
             <span className="brand-mark">
-              mt<span>·</span>
+              mt
+              <span>
+                <ArrowUpRight size={20} strokeWidth={2.4} />
+              </span>
             </span>
             <span className="brand-name">
               {profile.name}
-              <span>{c.discipline}</span>
+              <small>{c.discipline}</small>
             </span>
           </a>
           <nav
+            id="main-navigation"
             className={`main-nav ${menuOpen ? "is-open" : ""}`}
             aria-label={
               lang === "en" ? "Main navigation" : "Navigation principale"
             }
-            id="main-navigation"
           >
-            {navigation.map((id, i) => (
-              <a href={`#${id}`} key={id} onClick={() => setMenuOpen(false)}>
-                {c.nav[i]}
-                {id === "contact" && <ArrowUpRight size={14} />}
+            {sectionOrder.map((id) => (
+              <a key={id} href={`#${id}`} onClick={() => visitSection(id)}>
+                {sectionInfo[id].title[lang]}
               </a>
             ))}
+            <a href="#contact" onClick={() => setMenuOpen(false)}>
+              {o.contact}
+              <ArrowUpRight size={13} />
+            </a>
           </nav>
           <div className="header-controls">
             <div
@@ -514,286 +556,195 @@ export default function App() {
           </div>
         </div>
       </header>
+
       <main id="main">
         <section
           className="hero container"
           id="top"
           aria-labelledby="hero-heading"
         >
-          <div className="availability">
-            <span className="status-dot" />
-            {c.availability}
-          </div>
-          <div className="hero-grid">
-            <div className="hero-copy">
-              <h1 id="hero-heading">
-                {c.heroTop}
-                <br />
-                <em>{c.heroBottom}</em>
-              </h1>
-              <p className="hero-intro">{c.intro}</p>
-              <p className="hero-note">{c.heroNote}</p>
-              <div className="hero-actions">
-                <a className="button primary" href="#work">
-                  {c.viewWork}
-                  <ArrowDown size={17} />
-                </a>
-                <a className="text-link" href="#contact">
-                  {c.contactMe}
-                  <ArrowUpRight size={17} />
-                </a>
-                {profile.cvPath && (
-                  <a className="text-link" href={profile.cvPath} download>
-                    {c.cv}
-                    <FileText size={17} />
-                  </a>
-                )}
-              </div>
-            </div>
-            <Workflow lang={lang} />
-          </div>
-          <div className="hero-bottom">
-            <span className="micro">
-              {lang === "en"
-                ? "NLP / FEDERATED LEARNING"
-                : "TAL / APPRENTISSAGE FÉDÉRÉ"}{" "}
-              /{" "}
-              {lang === "en"
-                ? "INTELLIGENT AUTOMATION"
-                : "AUTOMATISATION INTELLIGENTE"}
+          <div className="hero-copy">
+            <span className="eyebrow hero-hello">
+              {o.hello}
+              <span className="hello-line" />
             </span>
-            <a href="#work" className="scroll-note">
-              {c.scroll}
-              <ArrowDown size={14} />
-            </a>
-          </div>
-        </section>
-
-        <section
-          className="work-section container"
-          id="work"
-          aria-labelledby="work-heading"
-        >
-          <div className="section-heading">
-            <div>
-              <span className="eyebrow">{c.selectedKicker}</span>
-              <h2 id="work-heading">{c.selectedTitle}</h2>
+            <h1 id="hero-heading">
+              {o.heroFirst}
+              <br />
+              <span>{o.heroSecond}</span>
+              <Asterisk
+                className="hero-asterisk"
+                size={42}
+                strokeWidth={1.3}
+                aria-hidden="true"
+              />
+            </h1>
+            <p className="hero-intro">{o.intro}</p>
+            <p className="hero-note">{o.note}</p>
+            <div className="hero-actions">
+              <a
+                href="#experience"
+                className="button primary"
+                onClick={() => visitSection("experience")}
+              >
+                {o.experienceAction}
+                <ArrowDown size={17} />
+              </a>
+              <a
+                href="#projects"
+                className="text-link"
+                onClick={() => visitSection("projects")}
+              >
+                {o.projectsAction}
+                <ArrowUpRight size={17} />
+              </a>
+              {profile.cvPath && (
+                <a href={profile.cvPath} className="text-link" download>
+                  {c.cv}
+                  <FileText size={17} />
+                </a>
+              )}
             </div>
-            <p>{c.selectedIntro}</p>
           </div>
-          <div className="featured-grid">
-            {projects
-              .filter((p) => p.featured)
-              .map((p) => (
-                <article
-                  className={`featured-card ${p.id === "fasa" ? "featured-main" : ""}`}
-                  key={p.id}
+          <div className="hero-playground">
+            <div className="playground-top">
+              <span className="status-dot" />
+              {o.available}
+              <span className="playground-code">MT.01</span>
+            </div>
+            <p className="playground-label">{o.quickTitle}</p>
+            <div className="capability-stack">
+              {[
+                {
+                  id: "fasa",
+                  title: o.tileModel,
+                  note: o.tileModelNote,
+                  Icon: Network,
+                },
+                {
+                  id: "attendance",
+                  title: o.tileAgent,
+                  note: o.tileAgentNote,
+                  Icon: Workflow,
+                },
+                {
+                  id: "chifaa",
+                  title: o.tileApp,
+                  note: o.tileAppNote,
+                  Icon: Code2,
+                },
+              ].map(({ id, title, note, Icon }, i) => (
+                <button
+                  className={`capability capability-${i}`}
+                  onClick={() => openProject(id)}
+                  key={id}
                 >
-                  <button
-                    className="visual-button"
-                    onClick={() => openProject(p.id)}
-                    aria-label={`${c.caseStudy}: ${p.title[lang]}`}
-                  >
-                    <ProjectVisual id={p.id} lang={lang} />
-                    <span className="visual-open">
-                      <ArrowUpRight size={22} />
-                    </span>
-                  </button>
-                  <div className="featured-content">
-                    <div className="card-context">
-                      <span className="eyebrow">{p.context[lang]}</span>
-                      <span className="micro">/{p.number}</span>
-                    </div>
-                    <h3>
-                      <button onClick={() => openProject(p.id)}>
-                        {p.title[lang]}
-                      </button>
-                    </h3>
-                    {p.id === "fasa" && (
-                      <p className="project-subtitle">{p.subtitle[lang]}</p>
-                    )}
-                    <p>{p.description[lang]}</p>
-                    <div className="tags">
-                      {p.technologies
-                        .slice(0, p.id === "fasa" ? 4 : 3)
-                        .map((t) => (
-                          <span key={t}>{t}</span>
-                        ))}
-                    </div>
-                    <button
-                      className="text-link"
-                      onClick={() => openProject(p.id)}
-                    >
-                      {c.caseStudy}
-                      <ArrowUpRight size={16} />
-                    </button>
-                  </div>
-                </article>
+                  <span className="capability-icon">
+                    <Icon size={25} strokeWidth={1.5} />
+                  </span>
+                  <span>
+                    <strong>{title}</strong>
+                    <small>{note}</small>
+                  </span>
+                  <ArrowUpRight size={18} />
+                </button>
               ))}
-          </div>
-
-          <div className="project-index">
-            <div className="index-heading">
-              <div>
-                <span className="eyebrow">{c.indexKicker}</span>
-                <h3>{c.indexTitle}</h3>
-              </div>
-              <span className="micro index-count" aria-live="polite">
-                {visibleProjects.length.toString().padStart(2, "0")}{" "}
-                {c.showCount}
+            </div>
+            <div className="playground-bottom">
+              <span>01 / 02 / 03</span>
+              <span>
+                {lang === "en" ? "CLICK. EXPLORE." : "CLIQUEZ. EXPLOREZ."}
+                <ArrowUpRight size={12} />
               </span>
             </div>
-            <div
-              className="filters"
-              role="group"
-              aria-label={
-                lang === "en"
-                  ? "Filter projects by category"
-                  : "Filtrer les projets par catégorie"
+          </div>
+        </section>
+        <div className="proof-strip container">
+          <span>
+            <strong>
+              {publicExperiences.length.toString().padStart(2, "0")}
+            </strong>
+            {o.proofInternships}
+          </span>
+          <span>
+            <strong>{projects.length.toString().padStart(2, "0")}</strong>
+            {o.proofProjects}
+          </span>
+          <span className="proof-location">
+            <strong>EN / FR</strong>
+            {o.proofLanguages}
+          </span>
+          <a href="#contact">
+            <span className="status-dot" />
+            {o.available}
+            <ArrowUpRight size={14} />
+          </a>
+        </div>
+
+        <div className="portfolio-sections container">
+          <div className="section-toolbar">
+            <span className="eyebrow">{o.explore}</span>
+            <button
+              className="expand-all"
+              onClick={() =>
+                setOpenSections(
+                  openSections.size === sectionOrder.length
+                    ? new Set()
+                    : new Set(sectionOrder),
+                )
               }
             >
-              <button
-                aria-pressed={category === "all"}
-                onClick={() => setCategory("all")}
-              >
-                {c.all}
-              </button>
-              {categories.map((cat) => (
-                <button
-                  key={cat.id}
-                  aria-pressed={category === cat.id}
-                  onClick={() => setCategory(cat.id)}
-                >
-                  {cat.label[lang]}
-                </button>
-              ))}
-            </div>
-            <div className="index-list">
-              {visibleProjects.map((p) => (
-                <button
-                  className="index-row"
-                  key={p.id}
-                  onClick={() => openProject(p.id)}
-                >
-                  <span className="row-number">{p.number}</span>
-                  <span className="row-title">
-                    {p.title[lang]}
-                    <small>{p.subtitle[lang]}</small>
-                  </span>
-                  <span className="row-category">
-                    {
-                      categories.find((cat) => cat.id === p.category)!.label[
-                        lang
-                      ]
-                    }
-                  </span>
-                  <ArrowUpRight size={21} />
-                </button>
-              ))}
-              {!visibleProjects.length && <p>{c.noProjects}</p>}
-            </div>
+              {openSections.size === sectionOrder.length
+                ? o.collapseAll
+                : o.expandAll}
+              {openSections.size === sectionOrder.length ? (
+                <Minus size={14} />
+              ) : (
+                <Plus size={14} />
+              )}
+            </button>
           </div>
-        </section>
-
-        <section
-          className="about-section"
-          id="about"
-          aria-labelledby="about-heading"
-        >
-          <div className="container about-grid">
-            <div>
-              <span className="eyebrow">{c.aboutKicker}</span>
-              <h2 id="about-heading" className="multiline">
-                {c.aboutTitle}
-              </h2>
-              <div className="initials-art" aria-hidden="true">
-                <span>
-                  m<span className="initial-t">t</span>
-                  <i>
-                    <ArrowUpRight size={52} strokeWidth={1.2} />
-                  </i>
-                </span>
-                <small>
-                  {lang === "en"
-                    ? "RESEARCH → SYSTEMS"
-                    : "RECHERCHE → SYSTÈMES"}
-                </small>
-              </div>
-            </div>
-            <div className="about-copy">
-              <p className="lead">{c.aboutFirst}</p>
-              <p>{c.aboutSecond}</p>
-              <p>{c.aboutThird}</p>
-              <div className="seeking-note">
-                <span className="eyebrow">
-                  <span className="status-dot" />
-                  {c.seekingTitle}
-                </span>
-                <p>{c.seeking}</p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section
-          className="experience-section container"
-          id="experience"
-          aria-labelledby="experience-heading"
-        >
-          <div className="section-heading">
-            <div>
-              <span className="eyebrow">{c.experienceKicker}</span>
-              <h2 id="experience-heading">{c.experienceTitle}</h2>
-            </div>
-            <p>{c.experienceIntro}</p>
-          </div>
-          <div className="timeline">
-            {experiences
-              .filter(
-                (e) =>
-                  e.published &&
-                  [
-                    e.company,
-                    ...Object.values(e.role),
-                    ...Object.values(e.dates),
-                    ...Object.values(e.location),
-                    ...Object.values(e.summary),
-                    ...e.contributions.flatMap((v) => Object.values(v)),
-                    ...e.technologies,
-                  ].every((v) => v.trim() && !v.includes("[")),
-              )
-              .map((e) => (
-                <article className="experience" key={e.id}>
-                  <div className="experience-date">
-                    <span className="timeline-dot" />
-                    {e.dates[lang]}
-                    <span className="experience-location">
-                      {e.location[lang]}
+          <FoldSection
+            id="experience"
+            lang={lang}
+            open={openSections.has("experience")}
+            toggle={() => toggleSection("experience")}
+          >
+            <div className="experience-grid">
+              {publicExperiences.map((e) => (
+                <article className="experience-card" key={e.id}>
+                  <div className="experience-top">
+                    <span className={`company-mark company-${e.id}`}>
+                      {e.company.split(" ")[0].slice(0, 2).toUpperCase()}
                     </span>
+                    <span className="experience-date">{e.dates[lang]}</span>
                   </div>
-                  <div>
-                    <h3>{e.company}</h3>
-                    <p className="experience-role">{e.role[lang]}</p>
-                    <p>{e.summary[lang]}</p>
+                  <h3>{e.company}</h3>
+                  <p className="experience-role">{e.role[lang]}</p>
+                  <p className="experience-summary">
+                    {experienceOverview[e.id]?.[lang] || e.summary[lang]}
+                  </p>
+                  <span className="experience-location">
+                    {e.location[lang]}
+                  </span>
+                  <details className="experience-details">
+                    <summary>
+                      {o.experienceDetails}
+                      <Plus size={14} />
+                    </summary>
                     <ul>
                       {e.contributions.map((item) => (
                         <li key={item.en}>{item[lang]}</li>
                       ))}
                     </ul>
-                    <div className="experience-bottom">
-                      {e.technologies.length > 0 && (
-                        <span className="experience-tech">
-                          {e.technologies.join(" · ")}
-                        </span>
-                      )}
-                      {e.id === "hepta" && (
-                        <a href="#research" className="text-link">
-                          {lang === "en"
-                            ? "FedTwin vision paper"
-                            : "Papier de vision FedTwin"}
-                          <ArrowDown size={15} />
-                        </a>
-                      )}
+                    {e.technologies.length > 0 && (
+                      <div className="tags">
+                        {e.technologies.map((t) => (
+                          <span key={t}>{t}</span>
+                        ))}
+                      </div>
+                    )}
+                    <div className="experience-links">
                       {e.relatedProjects.map((id) => (
                         <button
                           className="text-link"
@@ -801,199 +752,273 @@ export default function App() {
                           onClick={() => openProject(id)}
                         >
                           {projects.find((p) => p.id === id)?.title[lang]}
-                          <ArrowUpRight size={15} />
+                          <ArrowUpRight size={14} />
                         </button>
                       ))}
+                      {e.id === "hepta" && (
+                        <a
+                          href="#research"
+                          className="text-link"
+                          onClick={() => visitSection("research")}
+                        >
+                          FedTwin
+                          <ArrowUpRight size={14} />
+                        </a>
+                      )}
                     </div>
-                  </div>
+                  </details>
                 </article>
               ))}
-          </div>
-        </section>
-
-        <section
-          className="skills-section container"
-          aria-labelledby="skills-heading"
-        >
-          <div className="section-heading">
-            <div>
-              <span className="eyebrow">{c.skillsKicker}</span>
-              <h2 id="skills-heading">{c.skillsTitle}</h2>
             </div>
-            <p>{c.skillsIntro}</p>
-          </div>
-          <div className="skills-grid">
-            {skills.map((s, i) => (
-              <article className="skill-group" key={s.name.en}>
-                <span className="skill-number">0{i + 1}</span>
-                <h3>{s.name[lang]}</h3>
-                <p>{typeof s.items === "string" ? s.items : s.items[lang]}</p>
-                <button
-                  className="text-link"
-                  onClick={() => openProject(s.evidence)}
-                >
-                  {c.evidence}
-                  <ArrowUpRight size={14} />
-                </button>
-              </article>
-            ))}
-          </div>
-        </section>
+          </FoldSection>
 
-        <section
-          className="research-section"
-          id="research"
-          aria-labelledby="research-heading"
-        >
-          <div className="container">
-            <span className="eyebrow">{c.researchKicker}</span>
-            <h2 id="research-heading">{c.researchTitle}</h2>
+          <FoldSection
+            id="projects"
+            lang={lang}
+            open={openSections.has("projects")}
+            toggle={() => toggleSection("projects")}
+          >
+            <div className="project-toolbar">
+              <div
+                className="filters"
+                role="group"
+                aria-label={
+                  lang === "en"
+                    ? "Filter projects by category"
+                    : "Filtrer les projets par catégorie"
+                }
+              >
+                <button
+                  aria-pressed={category === "highlights"}
+                  onClick={() => setCategory("highlights")}
+                >
+                  {o.highlights}
+                  <Asterisk size={12} />
+                </button>
+                <button
+                  aria-pressed={category === "all"}
+                  onClick={() => setCategory("all")}
+                >
+                  {c.all}
+                  <span>09</span>
+                </button>
+                {categories.map((cat) => (
+                  <button
+                    key={cat.id}
+                    aria-pressed={category === cat.id}
+                    onClick={() => setCategory(cat.id)}
+                  >
+                    {cat.label[lang]}
+                  </button>
+                ))}
+              </div>
+              <span className="project-count" aria-live="polite">
+                {visibleProjects.length} / {projects.length}
+              </span>
+            </div>
+            <div className="project-grid">
+              {visibleProjects.map((p) => (
+                <article className={`project-card project-${p.id}`} key={p.id}>
+                  <button
+                    className="project-card-open"
+                    onClick={() => openProject(p.id)}
+                    aria-label={`${o.projectDetails}: ${p.title[lang]}`}
+                  >
+                    <span className="project-art" aria-hidden="true">
+                      {p.id === "fasa" ? (
+                        <>
+                          <Network size={54} strokeWidth={1} />
+                          <span className="art-orbit" />
+                        </>
+                      ) : p.id === "attendance" ? (
+                        <Workflow size={54} strokeWidth={1} />
+                      ) : p.id === "chifaa" ? (
+                        <Plus size={54} strokeWidth={1} />
+                      ) : (
+                        <Code2 size={42} strokeWidth={1} />
+                      )}
+                      <span className="project-art-badge">
+                        {projectOverview[p.id].badge[lang]}
+                      </span>
+                      <ArrowUpRight className="project-art-arrow" size={20} />
+                    </span>
+                    <span className="project-card-body">
+                      <span className="project-context">{p.context[lang]}</span>
+                      <strong>{p.title[lang]}</strong>
+                      <span className="project-summary">
+                        {projectOverview[p.id].summary[lang]}
+                      </span>
+                      <span className="project-tech">
+                        {p.technologies.slice(0, 3).join(" · ")}
+                      </span>
+                      <span className="project-action">
+                        {o.projectDetails}
+                        <ArrowUpRight size={15} />
+                      </span>
+                    </span>
+                  </button>
+                </article>
+              ))}
+            </div>
+          </FoldSection>
+
+          <FoldSection
+            id="research"
+            lang={lang}
+            open={openSections.has("research")}
+            toggle={() => toggleSection("research")}
+          >
             <div className="research-grid">
               {research.map((r, i) => (
                 <article className="research-card" key={r.title.en}>
                   <div className="research-top">
-                    <FileText size={24} strokeWidth={1.3} />
-                    <span className="micro">0{i + 1}</span>
+                    <FileText size={22} strokeWidth={1.5} />
+                    <span>0{i + 1}</span>
                   </div>
                   <span className="eyebrow">{r.type[lang]}</span>
                   <h3>{r.title[lang]}</h3>
-                  <p>{r.description[lang]}</p>
+                  <p>{researchOverview[i][lang]}</p>
                   {r.link.available ? (
-                    <ExternalLink href={r.link.url} className="text-link">
+                    <ExternalLink className="text-link" href={r.link.url}>
                       {r.link.label[lang]}
-                      <ArrowUpRight size={16} />
+                      <ArrowUpRight size={15} />
                     </ExternalLink>
                   ) : r.project ? (
                     <button
                       className="text-link"
                       onClick={() => openProject(r.project!)}
                     >
-                      {c.caseStudy}
-                      <ArrowUpRight size={16} />
+                      {o.projectDetails}
+                      <ArrowUpRight size={15} />
                     </button>
                   ) : null}
                 </article>
               ))}
             </div>
-          </div>
-        </section>
+            <p className="section-footnote">{o.researchNote}</p>
+          </FoldSection>
 
-        <section
-          className="education-section container"
-          aria-labelledby="education-heading"
-        >
-          <div>
-            <span className="eyebrow">{c.educationKicker}</span>
-            <h2 id="education-heading">{c.educationTitle}</h2>
-          </div>
-          <div className="education-grid">
-            <div className="education-list">
-              {education.map((e) => (
-                <article key={e.dates}>
-                  <span className="micro">{e.dates}</span>
-                  <h3>{e.degree[lang]}</h3>
-                  <p>{e.institution}</p>
-                  {e.note && <small>{e.note[lang]}</small>}
-                </article>
-              ))}
-            </div>
-            <div className="leadership">
-              <span className="eyebrow">{c.leadership}</span>
-              {leadership.map((item, i) => (
-                <div key={item.title.en}>
-                  <span className="leadership-symbol" aria-hidden="true">
+          <FoldSection
+            id="education"
+            lang={lang}
+            open={openSections.has("education")}
+            toggle={() => toggleSection("education")}
+          >
+            <div className="education-grid">
+              <div className="education-list">
+                {education.map((e, i) => (
+                  <article className="education-card" key={e.dates}>
+                    <span className="education-date">{e.dates}</span>
+                    <h3>{i === 0 ? "ENSIASD" : "EST Safi"}</h3>
+                    <p>{e.degree[lang]}</p>
+                    <details>
+                      <summary>
+                        {lang === "en"
+                          ? "School details"
+                          : "Détails de la formation"}
+                        <ChevronDown size={14} />
+                      </summary>
+                      <p>{e.institution}</p>
+                      {e.note && <small>{e.note[lang]}</small>}
+                    </details>
+                  </article>
+                ))}
+              </div>
+              <div className="leadership">
+                <span className="eyebrow">{c.leadership}</span>
+                {leadership.map((item, i) => (
+                  <div key={item.title.en}>
                     {i === 0 ? (
                       <ArrowUpRight size={22} />
                     ) : (
                       <Asterisk size={23} />
                     )}
-                  </span>
-                  <h3>{item.title[lang]}</h3>
-                  <p>{item.description[lang]}</p>
-                </div>
+                    <span>
+                      <h3>{item.title[lang]}</h3>
+                      <p>{item.description[lang]}</p>
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </FoldSection>
+
+          <FoldSection
+            id="skills"
+            lang={lang}
+            open={openSections.has("skills")}
+            toggle={() => toggleSection("skills")}
+          >
+            <div className="skills-grid">
+              {skills.map((s) => (
+                <article className="skill-group" key={s.name.en}>
+                  <h3>{s.name[lang]}</h3>
+                  <div className="tags">
+                    {(typeof s.items === "string" ? s.items : s.items[lang])
+                      .split(" · ")
+                      .map((item) => (
+                        <span key={item}>{item}</span>
+                      ))}
+                  </div>
+                  <button
+                    className="text-link"
+                    onClick={() => openProject(s.evidence)}
+                  >
+                    {c.evidence}
+                    <ArrowUpRight size={14} />
+                  </button>
+                </article>
               ))}
             </div>
-          </div>
-        </section>
+            <p className="section-footnote">{o.skillsNote}</p>
+          </FoldSection>
+        </div>
 
         <section
-          className="contact-section"
+          className="contact-section container"
           id="contact"
           aria-labelledby="contact-heading"
         >
-          <div className="container contact-grid">
-            <div>
-              <span className="eyebrow">{c.contactKicker}</span>
-              <h2 id="contact-heading" className="multiline">
-                {c.contactTitle}
-              </h2>
-              <p>{c.contactIntro}</p>
-              <a
-                className="contact-email"
-                href={`mailto:${profile.email}`}
-                aria-label={`${c.emailLabel}: ${profile.email}`}
-              >
-                {profile.email}
-                <ArrowUpRight size={26} />
-              </a>
-              <div className="social-links">
-                <ExternalLink href={profile.github}>
-                  <Github size={17} />
-                  GitHub
-                  <ArrowUpRight size={14} />
-                </ExternalLink>
-                <ExternalLink href={profile.linkedin}>
-                  <Linkedin size={17} />
-                  LinkedIn
-                  <ArrowUpRight size={14} />
-                </ExternalLink>
-                {profile.cvPath && (
-                  <a href={profile.cvPath} download>
-                    <FileText size={17} />
-                    {c.cv}
-                  </a>
-                )}
-              </div>
-            </div>
-            <div className="contact-stamp" aria-hidden="true">
-              <svg viewBox="0 0 220 220">
-                <defs>
-                  <path
-                    id="circle-text"
-                    d="M110 110 m-83 0 a83 83 0 1 1 166 0 a83 83 0 1 1-166 0"
-                  />
-                </defs>
-                <circle
-                  cx="110"
-                  cy="110"
-                  r="106"
-                  fill="none"
-                  stroke="currentColor"
-                />
-                <text fontSize="10.5" letterSpacing="3.6" fill="currentColor">
-                  <textPath href="#circle-text">
-                    {lang === "en"
-                      ? "LET’S BUILD SOMETHING USEFUL · APPLIED AI & DATA · "
-                      : "CONSTRUISONS UN PROJET UTILE · IA & DONNÉES · "}
-                  </textPath>
-                </text>
-                <path
-                  d="M72 148l75-75M73 73h74v74"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="3"
-                />
-              </svg>
+          <div>
+            <span className="eyebrow">{o.available}</span>
+            <h2 id="contact-heading">
+              {o.contactTitle}
+              <Asterisk size={27} strokeWidth={1.4} />
+            </h2>
+            <p>{o.contactText}</p>
+            <p className="opportunity-note">{o.opportunity}</p>
+          </div>
+          <div className="contact-actions">
+            <a className="button primary" href={`mailto:${profile.email}`}>
+              {o.email}
+              <ArrowUpRight size={19} />
+            </a>
+            <a className="contact-email" href={`mailto:${profile.email}`}>
+              {profile.email}
+            </a>
+            <div className="social-links">
+              <ExternalLink href={profile.github}>
+                <Github size={16} />
+                GitHub
+                <ArrowUpRight size={13} />
+              </ExternalLink>
+              <ExternalLink href={profile.linkedin}>
+                <Linkedin size={16} />
+                LinkedIn
+                <ArrowUpRight size={13} />
+              </ExternalLink>
             </div>
           </div>
         </section>
       </main>
       <footer className="site-footer container">
-        <a className="footer-brand" href="#top">
+        <span>
           {profile.name}
-          <span>© {new Date().getFullYear()}</span>
-        </a>
-        <span>{c.footer}</span>
+          <small>
+            © {new Date().getFullYear()} ·{" "}
+            {lang === "en" ? "Made in Morocco" : "Créé au Maroc"}
+          </small>
+        </span>
         <a href="#top">
           {c.backTop}
           <ArrowUp size={15} />
