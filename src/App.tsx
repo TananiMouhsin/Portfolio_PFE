@@ -37,6 +37,7 @@ import {
   type Project,
 } from "./content";
 import {
+  categoryLabels,
   experienceOverview,
   overviewCopy,
   projectOverview,
@@ -354,12 +355,7 @@ function FoldSection({
             <Icon size={23} strokeWidth={1.6} />
           </span>
           <span className="fold-name">
-            <span className="fold-label">
-              <span className="section-number">
-                0{sectionOrder.indexOf(id) + 1}
-              </span>
-              {info.title[lang]}
-            </span>
+            <span className="fold-label">{info.title[lang]}</span>
             <span className="fold-subtitle">{info.subtitle[lang]}</span>
           </span>
           <span className="fold-preview">{info.preview[lang]}</span>
@@ -608,9 +604,13 @@ export default function App() {
           </div>
           <div className="hero-playground">
             <div className="playground-top">
-              <span className="status-dot" />
-              {o.available}
-              <span className="playground-code">MT.01</span>
+              <span className="profile-avatar" aria-hidden="true">
+                mt<span>✦</span>
+              </span>
+              <span className="profile-introduction">
+                <strong>{profile.name}</strong>
+                <small>{o.miniRole}</small>
+              </span>
             </div>
             <p className="playground-label">{o.quickTitle}</p>
             <div className="capability-stack">
@@ -651,23 +651,20 @@ export default function App() {
               ))}
             </div>
             <div className="playground-bottom">
-              <span>01 / 02 / 03</span>
               <span>
-                {lang === "en" ? "CLICK. EXPLORE." : "CLIQUEZ. EXPLOREZ."}
-                <ArrowUpRight size={12} />
+                {o.cardHint}
+                <ArrowUpRight size={14} />
               </span>
             </div>
           </div>
         </section>
         <div className="proof-strip container">
           <span>
-            <strong>
-              {publicExperiences.length.toString().padStart(2, "0")}
-            </strong>
+            <strong>{publicExperiences.length}</strong>
             {o.proofInternships}
           </span>
           <span>
-            <strong>{projects.length.toString().padStart(2, "0")}</strong>
+            <strong>{projects.length}</strong>
             {o.proofProjects}
           </span>
           <span className="proof-location">
@@ -808,7 +805,7 @@ export default function App() {
                     aria-pressed={category === cat.id}
                     onClick={() => setCategory(cat.id)}
                   >
-                    {cat.label[lang]}
+                    {categoryLabels[cat.id][lang]}
                   </button>
                 ))}
               </div>

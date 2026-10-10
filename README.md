@@ -1,6 +1,6 @@
 # Mouhsin Tanani — Applied AI & Data
 
-A bilingual English/French portfolio built with React, TypeScript, and Vite. A compact overview with a bold cobalt hero, interactive capability cards, and five foldable sections: **Experience → Projects → Research → Education → Skills**. No backend, database, secret keys, analytics, or submission service required. Fonts are bundled locally. Contact uses a real email link.
+A bilingual English/French portfolio built with React, TypeScript, and Vite. A compact, personal introduction with warm cream and teal colors, plain-language project summaries, interactive project cards, and five foldable sections: **Experience → Projects → Research → Education → Skills**. Visible Open/Close labels make the sections easy to browse. No backend, database, secret keys, analytics, or submission service required. Fonts are bundled locally. Contact uses a real email link.
 
 Experience starts open; the other sections start folded. Navigation opens its destination, and **Expand all / Collapse all** controls the whole overview. Projects start with three highlights; visitors can select all nine or a category. Technical explanations stay behind a second disclosure inside project dialogs.
 

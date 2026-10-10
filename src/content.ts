@@ -857,7 +857,7 @@ export const copy = {
     limitations: "Limits & lessons",
     technologies: "Tools & technologies",
     resources: "Explore the work",
-    close: "Close case study",
+    close: "Back to browsing",
     projectDetails: "Project details",
     noPublicResources:
       "This case study is based on the documented work. No public resource is currently available.",
@@ -956,7 +956,7 @@ export const copy = {
     limitations: "Limites & enseignements",
     technologies: "Outils & technologies",
     resources: "Explorer les ressources",
-    close: "Fermer le projet",
+    close: "Retour aux projets",
     projectDetails: "Détails du projet",
     noPublicResources:
       "Cette étude présente le travail documenté. Aucune ressource publique n’est actuellement disponible.",

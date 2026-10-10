@@ -63,7 +63,7 @@ try {
   await page.setViewportSize({ width: 1440, height: 1000 });
   await reset();
   check(
-    (await page.locator("h1").innerText()).includes("Real things."),
+    (await page.locator("h1").innerText()).includes("Hi, I’m Mouhsin."),
     "Short English hero",
   );
   check(
@@ -106,18 +106,37 @@ try {
   await accessibility("Desktop overview");
 
   for (let i = 0; i < 4; i++) {
-    const details = page.locator('.experience-details').nth(i);
-    check(await details.evaluate(el => !el.open), 'Internship details start folded');
-    await details.locator('summary').click();
-    check(await details.evaluate(el => el.open), 'Internship detail opens');
-    check(await details.locator('li').count() > 0, 'Real contributions available');
-    await details.locator('summary').click();
+    const details = page.locator(".experience-details").nth(i);
+    check(
+      await details.evaluate((el) => !el.open),
+      "Internship details start folded",
+    );
+    await details.locator("summary").click();
+    check(await details.evaluate((el) => el.open), "Internship detail opens");
+    check(
+      (await details.locator("li").count()) > 0,
+      "Real contributions available",
+    );
+    await details.locator("summary").click();
   }
-  for (const [i, title] of ['FASA', 'Attendance AI Assistant', 'Chifaa'].entries()) {
-    await page.locator('.capability').nth(i).click();
-    check(await page.locator('#dialog-title').innerText() === title, 'Hero capability opens matching project');
-    await page.keyboard.press('Escape');
-    check(await page.locator('.capability').nth(i).evaluate(el => el === document.activeElement), 'Hero focus restored');
+  for (const [i, title] of [
+    "FASA",
+    "Attendance AI Assistant",
+    "Chifaa",
+  ].entries()) {
+    await page.locator(".capability").nth(i).click();
+    check(
+      (await page.locator("#dialog-title").innerText()) === title,
+      "Hero capability opens matching project",
+    );
+    await page.keyboard.press("Escape");
+    check(
+      await page
+        .locator(".capability")
+        .nth(i)
+        .evaluate((el) => el === document.activeElement),
+      "Hero focus restored",
+    );
   }
 
   for (const id of order) {
@@ -228,7 +247,7 @@ try {
     "French document language",
   );
   check(
-    (await page.locator("h1").innerText()).includes("Des projets concrets."),
+    (await page.locator("h1").innerText()).includes("Salut, c’est Mouhsin."),
     "French hero",
   );
   await page.reload();
@@ -244,7 +263,7 @@ try {
   await page.locator(".project-card-open").first().click();
   check(
     (await page.locator("dialog").innerText()).includes(
-      "Ce que j’ai construit",
+      "Ce que j’y ai apporté",
     ),
     "French summary",
   );
@@ -282,12 +301,14 @@ try {
       );
       await toggle("skills").click();
     }
+    await page.evaluate(() => window.scrollTo(0, 0));
     await page.screenshot({
       path: `test-results/${width}-fr.png`,
       fullPage: true,
     });
     await page.getByRole("button", { name: "English", exact: true }).click();
     await noOverflow(`${width}px English`);
+    await page.evaluate(() => window.scrollTo(0, 0));
     await page.screenshot({
       path: `test-results/${width}-en.png`,
       fullPage: true,

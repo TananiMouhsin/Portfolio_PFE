@@ -1,4 +1,12 @@
-import { text, type Localized } from "./content";
+import { text, type Category, type Localized } from "./content";
+
+export const categoryLabels: Record<Category, Localized> = {
+  ai: text("AI assistants", "Assistants IA"),
+  ml: text("Predictions", "Prédictions"),
+  multimodal: text("Text & voice", "Texte & voix"),
+  research: text("Experiments", "Expériences"),
+  data: text("Data tools", "Outils de données"),
+};
 
 // Short, visitor-facing copy. Detailed facts remain in content.ts.
 export const sectionOrder = [
@@ -16,8 +24,8 @@ export const sectionInfo: Record<
   experience: {
     title: text("Experience", "Expérience"),
     subtitle: text(
-      "Four internships. Real problems to solve.",
-      "Quatre stages. Des problèmes concrets à résoudre.",
+      "Where I’ve learned by doing.",
+      "Là où j’ai appris en pratiquant.",
     ),
     preview: text(
       "L3M Holding · Hepta Lab · XAI · Hyatt Regency",
@@ -27,8 +35,8 @@ export const sectionInfo: Record<
   projects: {
     title: text("Projects", "Projets"),
     subtitle: text(
-      "From a shared model to an AI that takes action.",
-      "Du modèle partagé à l’IA qui passe à l’action.",
+      "A few things I’ve built and tried.",
+      "Quelques idées que j’ai mises en pratique.",
     ),
     preview: text(
       "FASA · Attendance AI · Chifaa + 6 more",
@@ -49,8 +57,8 @@ export const sectionInfo: Record<
   education: {
     title: text("Education", "Formation"),
     subtitle: text(
-      "Engineering, a club, and a team win.",
-      "Un cycle ingénieur, un club et une victoire en équipe.",
+      "What I’m learning, in and out of class.",
+      "Ce que j’apprends, en cours et en dehors.",
     ),
     preview: text(
       "ENSIASD ’27 · EST Safi ’24 · AI Summer School",
@@ -60,8 +68,8 @@ export const sectionInfo: Record<
   skills: {
     title: text("Skills", "Compétences"),
     subtitle: text(
-      "The tools I reach for when it’s time to build.",
-      "Les outils que j’utilise pour passer à l’action.",
+      "What’s in my toolbox.",
+      "Ce qu’il y a dans ma boîte à outils.",
     ),
     preview: text(
       "Python · PyTorch · React · LLMs · Docker",
@@ -76,64 +84,64 @@ export const projectOverview: Record<
 > = {
   fasa: {
     summary: text(
-      "Train Arabic sentiment models across three simulated clients. Compare what changes when the data stays distributed.",
-      "Entraîner des modèles de sentiments en arabe sur trois clients simulés. Comparer les résultats quand les données restent distribuées.",
+      "Teaching AI to recognize sentiment in Arabic text. I compared training together with training across three simulated clients.",
+      "Apprendre à l’IA à reconnaître les sentiments dans les textes arabes. J’ai comparé un entraînement centralisé à trois clients simulés.",
     ),
-    badge: text("3 simulated clients", "3 clients simulés"),
+    badge: text("Understanding Arabic text", "Comprendre les textes arabes"),
   },
   attendance: {
     summary: text(
-      "Ask about attendance. Update a record. Check it worked. An AI assistant with manager-specific access.",
-      "Consulter les présences. Modifier une fiche. Vérifier le succès. Un assistant IA avec des accès propres à chaque responsable.",
+      "An assistant managers can ask about attendance. It checks permissions before updating records, then checks the result.",
+      "Un assistant auquel les responsables peuvent poser des questions sur les présences. Il vérifie les accès avant de modifier les données, puis le résultat.",
     ),
-    badge: text("Tools + access control", "Outils + contrôle d’accès"),
+    badge: text("A helper for everyday work", "Un assistant pour le quotidien"),
   },
   chifaa: {
     summary: text(
-      "Bring OCR, clinical risk prediction, and MRI classification into one Flutter prototype.",
-      "Réunir OCR, prédiction des risques cliniques et classification d’IRM dans un prototype Flutter.",
+      "A health-tech prototype that reads clinical information and explores risk prediction and medical scan classification.",
+      "Un prototype en santé qui lit des informations cliniques et explore la prédiction des risques et la classification d’images médicales.",
     ),
-    badge: text("OCR → models → app", "OCR → modèles → appli"),
+    badge: text("Exploring AI for health", "Explorer l’IA en santé"),
   },
   swin: {
     summary: text(
-      "Put a face anti-spoofing model through FGSM and PGD attacks, then explore adversarial training.",
-      "Tester un modèle anti-usurpation faciale avec FGSM et PGD, puis explorer l’entraînement adversarial.",
+      "Can a face anti-spoofing AI be fooled? I tested how it responds to manipulated images and explored ways to train it against attacks.",
+      "Peut-on tromper une IA anti-usurpation faciale ? J’ai testé sa réaction aux images modifiées et exploré un entraînement contre ces attaques.",
     ),
-    badge: text("Robustness under attack", "Robustesse face aux attaques"),
+    badge: text("Testing what can go wrong", "Tester ce qui peut mal tourner"),
   },
   foundercopilot: {
     summary: text(
-      "Help Moroccan founders find administrative information using an agentic RAG assistant.",
-      "Aider les entrepreneurs marocains à trouver les informations administratives avec un assistant RAG agentique.",
+      "An assistant that helps Moroccan entrepreneurs find answers about administrative steps, using information it retrieves.",
+      "Un assistant qui aide les entrepreneurs marocains à trouver des réponses sur les démarches administratives, à partir des informations qu’il retrouve.",
     ),
     badge: text("Context-aware answers", "Réponses contextualisées"),
   },
   cvfit: {
     summary: text(
-      "Give tailored CV feedback and connect it to collected, ranked job opportunities.",
-      "Proposer des retours personnalisés sur les CV et les relier à des offres collectées et classées.",
+      "Personalized CV feedback and job suggestions, brought together in one application.",
+      "Des conseils personnalisés pour le CV et des suggestions d’offres, réunis dans une application.",
     ),
     badge: text("CV feedback + job matching", "Conseils CV + offres ciblées"),
   },
   hotel: {
     summary: text(
-      "Predict booking cancellations with Random Forest alongside a mobile reservation application.",
-      "Prédire les annulations avec Random Forest, en parallèle d’une application mobile de réservation.",
+      "Using booking data to predict cancellations, alongside a mobile hotel reservation app.",
+      "Utiliser les données de réservation pour prédire les annulations, en parallèle d’une application mobile de réservation hôtelière.",
     ),
     badge: text("Prediction meets software", "Prédiction + logiciel"),
   },
   emotion: {
     summary: text(
-      "Fine-tune BERT for text emotions. Use TRILL and CNN-LSTM to explore emotion in voice.",
-      "Affiner BERT pour les émotions textuelles. Explorer les émotions vocales avec TRILL et CNN-LSTM.",
+      "Exploring emotions in messages and voice, with separate AI approaches for text and audio.",
+      "Explorer les émotions dans les messages et la voix, avec des approches IA distinctes pour le texte et l’audio.",
     ),
     badge: text("Text + voice", "Texte + voix"),
   },
   elasticsearch: {
     summary: text(
-      "Move sales CSVs through Logstash, a two-node Elasticsearch cluster, and Kibana.",
-      "Faire passer les CSV de ventes par Logstash, un cluster Elasticsearch à deux nœuds et Kibana.",
+      "Turning a CSV of sales into data I can search and explore with Elasticsearch and Kibana.",
+      "Transformer un CSV de ventes en données que je peux rechercher et explorer avec Elasticsearch et Kibana.",
     ),
     badge: text("Ingest → index → explore", "Ingérer → indexer → explorer"),
   },
@@ -141,20 +149,20 @@ export const projectOverview: Record<
 
 export const experienceOverview: Record<string, Localized> = {
   l3m: text(
-    "AI agents for everyday operations. Attendance tools, scoped access, and reliable updates.",
-    "Des agents IA pour les opérations quotidiennes : présences, accès limités et modifications fiables.",
+    "I worked on an AI assistant to help managers check and update attendance.",
+    "J’ai travaillé sur un assistant IA pour aider les responsables à consulter et modifier les présences.",
   ),
   hepta: text(
-    "Industrial digital twins, safe scenario simulations, and the FedTwin vision paper.",
-    "Jumeaux numériques industriels, simulations de scénarios et papier de vision FedTwin.",
+    "I explored industrial what-if scenarios and helped write the FedTwin vision paper.",
+    "J’ai exploré des scénarios industriels et participé à l’écriture du papier de vision FedTwin.",
   ),
   xai: text(
-    "Emotion recognition from text and voice, built around real-time constraints.",
-    "Reconnaissance des émotions par texte et voix, avec des contraintes de temps réel.",
+    "I worked on recognizing emotions in text and voice, with real-time use in mind.",
+    "J’ai travaillé sur la reconnaissance des émotions dans le texte et la voix, avec le temps réel en tête.",
   ),
   hyatt: text(
-    "Booking cancellation prediction and a mobile reservation app.",
-    "Prédiction des annulations et application mobile de réservation.",
+    "I worked on booking predictions and a mobile hotel reservation app.",
+    "J’ai travaillé sur la prédiction des annulations et une application mobile de réservation hôtelière.",
   ),
 };
 
@@ -175,42 +183,45 @@ export const researchOverview = [
 
 export const overviewCopy = {
   en: {
-    hello: "HEY, I’M MOUHSIN TANANI",
-    heroFirst: "AI ideas.",
-    heroSecond: "Real things.",
+    hello: "Welcome to my little corner of the internet",
+    heroFirst: "Hi, I’m Mouhsin.",
+    heroSecond: "I build with AI.",
     intro:
-      "I build models, agents, and apps. Final-year AI & Data engineering student, curious about what comes next.",
-    note: "ENSIASD · Morocco · Graduating 2027",
+      "I’m an AI & Data engineering student in Morocco. I like figuring things out, building them, and seeing what works. Here’s a little of what I’ve been up to.",
+    note: "Final year at ENSIASD · Graduating 2027",
     available: "PFE internship · January 2027",
-    experienceAction: "See my experience",
-    projectsAction: "Explore projects",
-    quickTitle: "A quick look at what I do",
-    tileModel: "Train a model.",
-    tileModelNote: "Arabic NLP & federated learning",
-    tileAgent: "Build an agent.",
-    tileAgentNote: "Tools, APIs & useful automation",
-    tileApp: "Make it usable.",
-    tileAppNote: "From prediction to an interface",
-    proofInternships: "internships",
-    proofProjects: "projects",
-    proofLanguages: "languages, one portfolio",
-    explore: "THE SHORT VERSION. THE DETAILS IF YOU WANT THEM.",
-    expand: "Open section",
-    collapse: "Close section",
+    experienceAction: "Where I’ve worked",
+    projectsAction: "See what I’ve made",
+    quickTitle: "Three things I’ve been working on",
+    miniRole: "AI student. Curious builder.",
+    cardHint: "Pick a card to see the project.",
+    tileModel: "Understanding language",
+    tileModelNote: "FASA · learning from Arabic text",
+    tileAgent: "Making work easier",
+    tileAgentNote: "An assistant for attendance questions",
+    tileApp: "Building useful apps",
+    tileAppNote: "Chifaa · exploring AI for health",
+    proofInternships: "places I’ve learned",
+    proofProjects: "projects to explore",
+    proofLanguages: "pick your language above",
+    explore: "Pick a section. Take a look around.",
+    expand: "Open",
+    collapse: "Close",
     expandAll: "Expand all",
     collapseAll: "Collapse all",
     experienceDetails: "What I worked on",
     highlights: "Highlights",
-    projectDetails: "Take a look",
-    deeper: "Go a little deeper",
-    contribution: "What I built",
-    results: "What’s documented",
+    projectDetails: "See the project",
+    deeper: "Curious about the technical bits?",
+    contribution: "My part in it",
+    results: "How it turned out",
     researchNote:
-      "Reports and a vision paper—not claims of peer-reviewed publication.",
+      "A few questions I’ve been digging into. FedTwin is a co-written vision paper.",
     skillsNote:
       "Different tools, different levels of experience. Follow a project to see how I used them.",
-    contactTitle: "Something in mind?",
-    contactText: "Let’s talk AI, internships, or a good idea.",
+    contactTitle: "Let’s say hello.",
+    contactText:
+      "Have a project, a question, or an internship in mind? I’d love to hear about it.",
     opportunity:
       "Looking for a six-month PFE internship from January 2027, preferably in France or Europe.",
     email: "Say hello",
@@ -218,42 +229,45 @@ export const overviewCopy = {
     allCount: "in total",
   },
   fr: {
-    hello: "SALUT, MOI C’EST MOUHSIN TANANI",
-    heroFirst: "Des idées IA.",
-    heroSecond: "Des projets concrets.",
+    hello: "Bienvenue dans mon petit coin d’internet",
+    heroFirst: "Salut, c’est Mouhsin.",
+    heroSecond: "Je crée avec l’IA.",
     intro:
-      "Je construis des modèles, des agents et des applications. Élève ingénieur en dernière année en IA & Data, curieux de la suite.",
-    note: "ENSIASD · Maroc · Diplôme en 2027",
+      "Je suis élève ingénieur en IA & Data au Maroc. J’aime comprendre les choses, les construire et voir ce qui fonctionne. Voici un peu de ce que je fais.",
+    note: "Dernière année à ENSIASD · Diplôme en 2027",
     available: "Stage PFE · Janvier 2027",
-    experienceAction: "Voir mon expérience",
-    projectsAction: "Explorer les projets",
-    quickTitle: "Un aperçu de ce que je fais",
-    tileModel: "Entraîner un modèle.",
-    tileModelNote: "TAL arabe & apprentissage fédéré",
-    tileAgent: "Créer un agent.",
-    tileAgentNote: "Outils, API & automatisation utile",
-    tileApp: "Le rendre utile.",
-    tileAppNote: "De la prédiction à l’interface",
-    proofInternships: "stages",
-    proofProjects: "projets",
-    proofLanguages: "langues, un portfolio",
-    explore: "L’ESSENTIEL. LES DÉTAILS SI VOUS LE SOUHAITEZ.",
-    expand: "Ouvrir la section",
-    collapse: "Fermer la section",
+    experienceAction: "Là où j’ai travaillé",
+    projectsAction: "Voir mes créations",
+    quickTitle: "Trois choses sur lesquelles j’ai travaillé",
+    miniRole: "Élève ingénieur. Curieux et créatif.",
+    cardHint: "Choisissez une carte pour voir le projet.",
+    tileModel: "Comprendre le langage",
+    tileModelNote: "FASA · apprendre à partir du texte arabe",
+    tileAgent: "Simplifier le quotidien",
+    tileAgentNote: "Un assistant pour les présences",
+    tileApp: "Créer des applis utiles",
+    tileAppNote: "Chifaa · explorer l’IA en santé",
+    proofInternships: "lieux où j’ai appris",
+    proofProjects: "projets à découvrir",
+    proofLanguages: "choisissez votre langue en haut",
+    explore: "Choisissez une rubrique. Faites un tour.",
+    expand: "Ouvrir",
+    collapse: "Fermer",
     expandAll: "Tout ouvrir",
     collapseAll: "Tout fermer",
     experienceDetails: "Ce que j’ai fait",
     highlights: "À la une",
     projectDetails: "Découvrir",
-    deeper: "Un peu plus en détail",
-    contribution: "Ce que j’ai construit",
-    results: "Les résultats documentés",
+    deeper: "Envie de voir la partie technique ?",
+    contribution: "Ce que j’y ai apporté",
+    results: "Ce que ça a donné",
     researchNote:
-      "Des rapports et un papier de vision, sans revendiquer de publication évaluée par les pairs.",
+      "Quelques questions que j’ai explorées. FedTwin est un papier de vision corédigé.",
     skillsNote:
       "Des outils et des niveaux d’expérience différents. Les projets montrent leurs usages concrets.",
-    contactTitle: "Une idée en tête ?",
-    contactText: "Parlons IA, stage ou projet à explorer.",
+    contactTitle: "Et si on échangeait ?",
+    contactText:
+      "Un projet, une question ou un stage en tête ? Je serais ravi d’en discuter.",
     opportunity:
       "Je cherche un stage PFE de six mois dès janvier 2027, de préférence en France ou en Europe.",
     email: "Échangeons",
