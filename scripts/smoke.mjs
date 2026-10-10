@@ -94,6 +94,36 @@ try {
       0,
     "Working contact action",
   );
+  const portrait = page.locator(".hero-portrait");
+  await portrait.evaluate((img) => img.decode());
+  check(
+    (await portrait.getAttribute("alt")) === "Portrait of Mouhsin Tanani",
+    "English portrait description",
+  );
+  const photo = await portrait.evaluate((img) => {
+    const canvas = document.createElement("canvas");
+    canvas.width = img.naturalWidth;
+    canvas.height = img.naturalHeight;
+    const ctx = canvas.getContext("2d");
+    ctx.drawImage(img, 0, 0);
+    const alpha = (x, y) => ctx.getImageData(x, y, 1, 1).data[3];
+    return {
+      upright: img.naturalHeight > img.naturalWidth,
+      corners: [
+        [0, 0],
+        [canvas.width - 1, 0],
+        [0, canvas.height - 1],
+        [canvas.width - 1, canvas.height - 1],
+      ].map(([x, y]) => alpha(x, y)),
+      subject: alpha(Math.floor(canvas.width / 2), Math.floor(canvas.height / 2)),
+    };
+  });
+  check(photo.upright, "Portrait is upright");
+  check(
+    photo.corners.every((alpha) => alpha === 0),
+    "Photo background is transparent",
+  );
+  check(photo.subject > 240, "Portrait subject remains visible");
   const desktopHeight = await page.evaluate(
     () => document.documentElement.scrollHeight,
   );
@@ -249,6 +279,10 @@ try {
   check(
     (await page.locator("h1").innerText()).includes("Salut, c’est Mouhsin."),
     "French hero",
+  );
+  check(
+    (await portrait.getAttribute("alt")) === "Portrait de Mouhsin Tanani",
+    "French portrait description",
   );
   await page.reload();
   check(

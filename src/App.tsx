@@ -89,7 +89,7 @@ function ProjectVisual({ id, lang }: { id: string; lang: Language }) {
             <path
               d="M100 150C100 80 250 115 250 56M400 150C400 80 250 115 250 56M250 170V56"
               fill="none"
-              stroke="#7486d4"
+              stroke="var(--accent)"
               strokeWidth="1.3"
               strokeDasharray="4 5"
             />
@@ -603,10 +603,15 @@ export default function App() {
             </div>
           </div>
           <div className="hero-playground">
-            <div className="playground-top">
-              <span className="profile-avatar" aria-hidden="true">
-                mt<span>✦</span>
-              </span>
+            <div className="portrait-stage">
+              <img
+                className="hero-portrait"
+                src={profile.portraitPath}
+                alt={profile.portraitAlt[lang]}
+                width="1091"
+                height="1442"
+                fetchPriority="high"
+              />
               <span className="profile-introduction">
                 <strong>{profile.name}</strong>
                 <small>{o.miniRole}</small>

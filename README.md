@@ -1,6 +1,6 @@
 # Mouhsin Tanani — Applied AI & Data
 
-A bilingual English/French portfolio built with React, TypeScript, and Vite. A compact, personal introduction with warm cream and teal colors, plain-language project summaries, interactive project cards, and five foldable sections: **Experience → Projects → Research → Education → Skills**. Visible Open/Close labels make the sections easy to browse. No backend, database, secret keys, analytics, or submission service required. Fonts are bundled locally. Contact uses a real email link.
+A bilingual English/French portfolio built with React, TypeScript, and Vite. A compact, personal introduction with a warm ivory, deep olive, and muted sand palette, plain-language project summaries, interactive project cards, and five foldable sections: **Experience → Projects → Research → Education → Skills**. Visible Open/Close labels make the sections easy to browse. No backend, database, secret keys, analytics, or submission service required. Fonts are bundled locally. Contact uses a real email link.
 
 Experience starts open; the other sections start folded. Navigation opens its destination, and **Expand all / Collapse all** controls the whole overview. Projects start with three highlights; visitors can select all nine or a category. Technical explanations stay behind a second disclosure inside project dialogs.
 
@@ -31,6 +31,10 @@ Edit **`src/content.ts`** for profile links and detailed project, experience, ed
 - The fifth experience has all requested fields and `published: false`. Fill in its company, localized role, dates, location, summary, contributions, technologies, and project IDs, then set `published: true`. Do not publish placeholder values. Keep the experience list in newest-first chronological order.
 - Empty factual fields are reserved under a project's `editing` object. Do not invent metrics, dates, screenshots, or ownership to fill gaps.
 
+## Portrait and colors
+
+The hero uses `public/mouhsin-portrait.png`, an upright, transparent cutout of the supplied photo. Set the asset path and English/French alternative text in `profile` in `src/content.ts`. The shared palette tokens are at the top of `src/styles.css`: ivory `#f7f4ea`, olive `#334638`, and sand `#c7b899`, with matching tonal surfaces. Keep the favicon, social artwork, and HTML theme color consistent when changing these tokens.
+
 ## CV and missing material
 
 Add the actual CV PDF to `public/mouhsin-tanani-cv.pdf`, then set `profile.cvPath` to `./mouhsin-tanani-cv.pdf`. The download actions are deliberately hidden until a path is supplied. Confirm the file exists before enabling them.
@@ -53,7 +57,7 @@ With the development server running:
 npm run test:smoke
 ```
 
-The Playwright smoke suite uses `/usr/bin/chromium`. Override `CHROMIUM_PATH` for a different installed Chromium executable, and `PORTFOLIO_TEST_URL` for another server address. It checks section order, short-page height limits, folding by keyboard, expand/collapse all, navigation opening folded destinations, filters, nine substantive dialogs, optional technical detail, focus trapping/restoration, Escape/backdrop dismissal, French translation and persistence, mobile navigation, hidden placeholders/CV, direct project and section links, viewport overflow, browser errors, and automated axe WCAG A/AA checks. Screenshots are written to ignored `test-results/` at desktop, tablet, and small-phone sizes in both languages. Automated accessibility checks complement visual and keyboard inspection; they are not a certification.
+The Playwright smoke suite uses `/usr/bin/chromium`. Override `CHROMIUM_PATH` for a different installed Chromium executable, and `PORTFOLIO_TEST_URL` for another server address. It checks portrait loading, orientation, background transparency and localized description, section order, short-page height limits, folding by keyboard, expand/collapse all, navigation opening folded destinations, filters, nine substantive dialogs, optional technical detail, focus trapping/restoration, Escape/backdrop dismissal, French translation and persistence, mobile navigation, hidden placeholders/CV, direct project and section links, viewport overflow, browser errors, and automated axe WCAG A/AA checks. Screenshots are written to ignored `test-results/` at desktop, tablet, and small-phone sizes in both languages. Automated accessibility checks complement visual and keyboard inspection; they are not a certification.
 
 ## Deployment
 

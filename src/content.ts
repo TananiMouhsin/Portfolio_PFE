@@ -5,6 +5,8 @@ export const text = (en: string, fr: string): Localized => ({ en, fr });
 
 export const profile = {
   name: "Mouhsin Tanani",
+  portraitPath: "./mouhsin-portrait.png",
+  portraitAlt: text("Portrait of Mouhsin Tanani", "Portrait de Mouhsin Tanani"),
   email: "tananimouhsin@gmail.com",
   github: "https://github.com/TananiMouhsin",
   linkedin: "https://www.linkedin.com/in/mouhsin-tanani-692b87263/",
